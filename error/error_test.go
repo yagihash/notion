@@ -49,7 +49,7 @@ func TestNotionError_Error(t *testing.T) {
 
 func TestParse(t *testing.T) {
 	type args struct {
-		response string
+		response []byte
 	}
 	tt := []struct {
 		name    string
@@ -60,14 +60,14 @@ func TestParse(t *testing.T) {
 		{
 			name: "validation error",
 			args: args{
-				response: `
+				response: []byte(`
 {
     "code": "validation_error",
     "message": "The provided database ID is not a valid Notion UUID: aaa.",
     "object": "error",
     "status": 400
 }
-`,
+`),
 			},
 			want: &NotionError{
 				Status:  400,
@@ -80,14 +80,14 @@ func TestParse(t *testing.T) {
 		{
 			name: "undefined code",
 			args: args{
-				response: `
+				response: []byte(`
 {
     "code": "undefined code",
     "message": "undefined error message",
     "object": "error",
     "status": 400
 }
-`,
+`),
 			},
 			want:    nil,
 			wantErr: true,
@@ -96,7 +96,7 @@ func TestParse(t *testing.T) {
 
 	for _, c := range tt {
 		t.Run(c.name, func(t *testing.T) {
-			got, err := Parse([]byte(c.args.response))
+			got, err := Parse(c.args.response)
 
 			if err != nil && !c.wantErr {
 				t.Errorf("unexpected error: %v", err)
