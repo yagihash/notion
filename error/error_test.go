@@ -29,18 +29,18 @@ func TestNotionError_Error(t *testing.T) {
 			want: "Aaa: Bbb",
 		},
 	}
-	for _, tt := range tt {
-		t.Run(tt.name, func(t *testing.T) {
+	for _, c := range tt {
+		t.Run(c.name, func(t *testing.T) {
 			ne := &NotionError{
-				Status:  tt.fields.Status,
-				Code:    tt.fields.Code,
-				Message: tt.fields.Message,
-				Object:  tt.fields.Object,
+				Status:  c.fields.Status,
+				Code:    c.fields.Code,
+				Message: c.fields.Message,
+				Object:  c.fields.Object,
 			}
 
 			got := ne.Error()
 
-			if diff := cmp.Diff(got, tt.want); diff != "" {
+			if diff := cmp.Diff(got, c.want); diff != "" {
 				t.Errorf("unexpected return value\n%v", diff)
 			}
 		})
@@ -94,16 +94,16 @@ func TestParse(t *testing.T) {
 		},
 	}
 
-	for _, tt := range tt {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := Parse([]byte(tt.args.response))
+	for _, c := range tt {
+		t.Run(c.name, func(t *testing.T) {
+			got, err := Parse([]byte(c.args.response))
 
-			if err != nil && !tt.wantErr {
+			if err != nil && !c.wantErr {
 				t.Errorf("unexpected error: %v", err)
-			} else if err == nil && tt.wantErr {
+			} else if err == nil && c.wantErr {
 				t.Error("error expected")
-			} else if !tt.wantErr { // first return value should not be used when the error is returned
-				if diff := cmp.Diff(got, tt.want); diff != "" {
+			} else if !c.wantErr { // first return value should not be used when the error is returned
+				if diff := cmp.Diff(got, c.want); diff != "" {
 					t.Errorf("unexpected return value\n%v", diff)
 				}
 			}
