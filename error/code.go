@@ -1,5 +1,9 @@
 package error
 
+import (
+	"fmt"
+)
+
 // Code represents error code text of Notion
 type Code string
 
@@ -16,3 +20,33 @@ const (
 	CodeInternalServerError Code = "internal_server_error"
 	CodeServiceUnavailable  Code = "service_unavailable"
 )
+
+func (c *Code) UnmarshalJSON(data []byte) error {
+	code := Code(data[1 : len(data)-1])
+	switch code {
+	case CodeInvalidJson:
+		fallthrough
+	case CodeInvalidRequestURL:
+		fallthrough
+	case CodeInvalidRequest:
+		fallthrough
+	case CodeValidationError:
+		fallthrough
+	case CodeUnauthorized:
+		fallthrough
+	case CodeRestrictedResource:
+		fallthrough
+	case CodeObjectNotFound:
+		fallthrough
+	case CodeConflictError:
+		fallthrough
+	case CodeRateLimited:
+		fallthrough
+	case CodeInternalServerError:
+		fallthrough
+	case CodeServiceUnavailable:
+		*c = code
+		return nil
+	}
+	return fmt.Errorf("undefined error code: %s", data)
+}
