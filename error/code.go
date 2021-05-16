@@ -21,6 +21,7 @@ const (
 	CodeServiceUnavailable  Code = "service_unavailable"
 )
 
+// UnmarshalJSON set the Code if the given error code is supported
 func (c *Code) UnmarshalJSON(data []byte) error {
 	code := Code(data[1 : len(data)-1])
 	switch code {
