@@ -1,5 +1,6 @@
 package error
 
+// Code represents error code text of Notion
 type Code string
 
 const (
